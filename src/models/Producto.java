@@ -1,4 +1,4 @@
-package model;
+package models;
 
 public class Producto {
 
@@ -46,8 +46,21 @@ public class Producto {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+    public String mostrarProducto() {
+        return "Codigo: " + codigo +
+                "\nNombre: " + nombre +
+                "\nPrecio: " + precio +
+                "\nCantidad: " + cantidad;
+    }
+
+    public float calcularMonto() {
+        return precio * cantidad;
+    }
+
+    public boolean disponible() {
+        return cantidad > 0;
+    }
+
 }
-
-
 
 
