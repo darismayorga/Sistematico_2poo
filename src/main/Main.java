@@ -6,11 +6,10 @@ import javax.swing.JOptionPane;
 
 
 public class Main {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
 
-        //Registro de Cliente
-        JOptionPane.showMessageDialog(null, "🏦 Bienvenido al Sistema Bancario\nPor Favor ingrese sus datos.");
+        //Registro clientes
+        JOptionPane.showMessageDialog(null, "🏦 Bienvenido al Sistema Bancario\nVamos a registrar sus datos.");
 
         String id = JOptionPane.showInputDialog("Ingrese su ID / Cédula:");
         String nombres = JOptionPane.showInputDialog("Ingrese sus Nombres:");
@@ -26,7 +25,7 @@ public class Main {
 
         //Menu
         int opcion = 0;
-        String menu = "====== MENÚ BANCARIO ======\n"
+        String menu = "Menu Principal\n"
                 + "1. Consultar saldo\n"
                 + "2. Depositar dinero\n"
                 + "3. Retirar dinero\n"
@@ -37,43 +36,57 @@ public class Main {
             try {
                 String input = JOptionPane.showInputDialog(null, menu, "Menú Principal", JOptionPane.QUESTION_MESSAGE);
 
-                // Si el usuario presiona "Cancelar" o la "X" en la ventana
                 if (input == null) {
                     opcion = 4;
                     break;
                 }
 
-                opcion = Integer.parseInt(input); // Convertimos el texto a número
+                opcion = Integer.parseInt(input);
 
                 switch (opcion) {
                     case 1:
                         JOptionPane.showMessageDialog(null, "💰 Tu saldo actual es: $" + miCuenta.consultarSaldo(), "Consulta de Saldo", JOptionPane.INFORMATION_MESSAGE);
                         break;
+
                     case 2:
                         String depInput = JOptionPane.showInputDialog(null, "¿Cuánto deseas depositar? $", "Depósito", JOptionPane.QUESTION_MESSAGE);
                         if (depInput != null) {
-                            double deposito = Double.parseDouble(depInput);
-                            miCuenta.depositar(deposito); // La lógica y validación siguen en la clase Cuenta
-                            JOptionPane.showMessageDialog(null, "Transacción procesada.\nTu saldo actual ahora es: $" + miCuenta.consultarSaldo());
+                            try {
+                                double deposito = Double.parseDouble(depInput);
+                                miCuenta.depositar(deposito);
+                                JOptionPane.showMessageDialog(null, "✅ Depósito procesado.\nTu saldo actual ahora es: $" + miCuenta.consultarSaldo(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                            } catch (IllegalArgumentException e) {
+                                // Aquí atrapamos el error si deposita negativos
+                                JOptionPane.showMessageDialog(null, "❌ Error: " + e.getMessage(), "Error en Depósito", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                         break;
+
                     case 3:
                         String retInput = JOptionPane.showInputDialog(null, "¿Cuánto deseas retirar? $", "Retiro", JOptionPane.QUESTION_MESSAGE);
                         if (retInput != null) {
-                            double retiro = Double.parseDouble(retInput);
-                            miCuenta.retirar(retiro); // La lógica y validación (no negativos) se aplica aquí
-                            JOptionPane.showMessageDialog(null, "Transacción procesada.\nTu saldo actual ahora es: $" + miCuenta.consultarSaldo());
+                            try {
+                                double retiro = Double.parseDouble(retInput);
+                                miCuenta.retirar(retiro);
+                                JOptionPane.showMessageDialog(null, "✅ Retiro procesado.\nTu saldo actual ahora es: $" + miCuenta.consultarSaldo(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                            } catch (IllegalArgumentException e) {
+                                // Aquí atrapamos el error si retira más de lo que tiene
+                                JOptionPane.showMessageDialog(null, "❌ Error: " + e.getMessage(), "Fondos Insuficientes", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                         break;
+
                     case 4:
                         JOptionPane.showMessageDialog(null, "👋 Saliendo del sistema. ¡Gracias por preferirnos!", "Despedida", JOptionPane.INFORMATION_MESSAGE);
                         break;
+
                     default:
                         JOptionPane.showMessageDialog(null, "⚠️ Opción no válida. Ingresa un número del 1 al 4.", "Opción Incorrecta", JOptionPane.WARNING_MESSAGE);
                 }
+
+                // Atrapamos el error si el usuario escribe letras en lugar de números
             } catch (NumberFormatException e) {
-                // Esto atrapa el error si el usuario escribe "hola" en vez de un número
-                JOptionPane.showMessageDialog(null, "⚠️ Error: Por favor, ingresa únicamente valores numéricos.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "⚠️ Error: Por favor, ingresa únicamente valores numéricos válidos.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
             }
         } while (opcion != 4);
     }
