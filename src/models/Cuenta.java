@@ -21,23 +21,21 @@ public class Cuenta {
     public void depositar(double monto) {
         if (monto > 0) {
             this.saldo += monto;
-            System.out.println("✅ Depósito exitoso.");
         } else {
-            System.out.println("❌ Error: No se pueden depositar cantidades negativas o cero.");
+            // En vez de imprimir, LANZAMOS un error
+            throw new IllegalArgumentException("No se pueden depositar cantidades negativas o cero.");
         }
     }
 
     public double retirar(double monto) {
         if (monto <= 0) {
-            System.out.println("❌ Error: El monto a retirar debe ser mayor a 0.");
-            return 0;
-        } else if (this.saldo >= monto) {
-            this.saldo -= monto;
-            System.out.println("✅ Retiro exitoso.");
-            return monto;
+            throw new IllegalArgumentException("El monto a retirar debe ser mayor a 0.");
+        } else if (monto > this.saldo) {
+            // Lanzamos el error si no le alcanza la plata
+            throw new IllegalArgumentException("Fondos insuficientes. Su saldo actual es $" + this.saldo);
         } else {
-            System.out.println("❌ Error: Fondos insuficientes. Saldo actual: $" + this.saldo);
-            return 0;
+            this.saldo -= monto;
+            return monto;
         }
     }
 
@@ -47,29 +45,10 @@ public class Cuenta {
                 " | Saldo: $" + this.saldo;
     }
 
-    public String getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public void setNumeroCuenta(String numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
-    }
-
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+    public String getNumeroCuenta() { return numeroCuenta; }
+    public void setNumeroCuenta(String numeroCuenta) { this.numeroCuenta = numeroCuenta; }
+    public double getSaldo() { return saldo; }
+    public void setSaldo(double saldo) { this.saldo = saldo; }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 }
-
-
