@@ -1,48 +1,62 @@
-package main;
-
 import java.util.Scanner;
 import models.Producto;
 
+
+
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        float valorTotalInventario = 0.0f;
 
-        Scanner sc = new Scanner(System.in);
+        System.out.print("Ingrese la cantidad de productos a registrar: ");
+        int cantidadProductos = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer del scanner
 
-        System.out.print("Ingrese la cantidad de productos: ");
-        int n = sc.nextInt();
-        sc.nextLine();
+        // Ciclo for para registrar los productos uno por uno
+        for (int i = 0; i < cantidadProductos; i++) {
+            System.out.println("\n--- Ingresando Producto " + (i + 1) + " ---");
 
-        float totalInventario = 0;
-
-        for (int i = 0; i < n; i++) {
-
-            System.out.println("Producto #" + (i + 1));
-
-            System.out.print("Codigo: ");
-            String codigo = sc.nextLine();
+            System.out.print("Código: ");
+            String codigo = scanner.nextLine();
 
             System.out.print("Nombre: ");
-            String nombre = sc.nextLine();
+            String nombre = scanner.nextLine();
 
             System.out.print("Precio: ");
-            float precio = sc.nextFloat();
+            float precio = scanner.nextFloat();
 
             System.out.print("Cantidad: ");
-            int cantidad = sc.nextInt();
-            sc.nextLine();
+            int cantidad = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer nuevamente
 
-            Producto p = new Producto(codigo, nombre, precio, cantidad);
+            // Asumo que creaste un constructor en tu clase Producto que recibe estos 4 parámetros
+            Producto producto = new Producto(codigo, nombre, precio, cantidad);
 
-            System.out.println("\n--- Producto ---");
-            System.out.println(p.mostrarProducto());
+            System.out.println("\n--- Información del Producto Ingresado ---");
 
-            System.out.println("Monto total: " + p.calcularMonto());
+            // 1. Mostrar su información
+            System.out.println(producto.mostrarProducto());
 
-            System.out.println("Disponible: " + p.disponible());
+            // 2. El valor total (precio x cantidad)
+            float valorProducto = producto.calcularMonto();
+            System.out.println("Valor total (precio x cantidad): $" + valorProducto);
 
-            totalInventario += p.calcularMonto();
+            // 3. Si está disponible (cantidad > 0)
+            if (producto.disponible()) {
+                System.out.println("Disponibilidad: Está disponible en inventario.");
+            } else {
+                System.out.println("Disponibilidad: Agotado.");
+            }
+
+            // Acumular el valor para el final
+            valorTotalInventario += valorProducto;
         }
 
-        System.out.println("\nTotal de inventario: " + totalInventario);
+        // Al finalizar, mostrar el valor total del inventario acumulado
+        System.out.println("\n==========================================");
+        System.out.println("Valor total del inventario (acumulado): $" + valorTotalInventario);
+        System.out.println("==========================================");
+
+        scanner.close();
     }
 }
